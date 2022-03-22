@@ -3,9 +3,7 @@
   "scripts": {
     "eslint": "npx eslint . --ext .js --fix",
     "stylelint-css": "npx stylelint **/*.css --fix",
-    "stylelint-scss": "npx stylelint **/*.scss --fix",
-    "html-validate": "npx html-validate .",
-    "ejs-validate": "npx html-validate . --ext ejs"
+    "html-validate": "npx html-validate ."
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
@@ -13,7 +11,6 @@
     "html-validate": "^6.6.0",
     "nodemon": "^2.0.15",
     "stylelint": "^14.0.1",
-    "stylelint-config-standard": "^25.0.0",
-    "stylelint-config-standard-scss": "^3.0.0"
+    "stylelint-config-standard": "^25.0.0"
   }
 }
