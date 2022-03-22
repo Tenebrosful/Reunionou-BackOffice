@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar">
         <div id="navbar-logo">
-            <router-link to="/"><img src="../assets/logo.png" alt="Reunionou"></router-link>
+            <router-link to="/"><img src="assets/logo.png" alt="Reunionou"></router-link>
         </div>
         <div id="navbar-content">
             <ul>
@@ -14,7 +14,7 @@
             </ul>
         </div>
         <div id="navbar-compte">
-            <router-link to="/connexion"><img src="../assets/compte.png" alt="Connexion"></router-link>
+            <router-link to="/connexion"><img src="assets/compte.png" alt="Connexion"></router-link>
         </div>
     </nav>
 </template>

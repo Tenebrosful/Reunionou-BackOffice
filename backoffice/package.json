@@ -9,15 +9,21 @@
     "build": "vue-cli-service build --dest build",
     "lint": "vue-cli-service lint"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
   "dependencies": {
+    "@innologica/vue-stackable-modal": "^0.1.10",
     "axios": "^0.25.0",
     "moment": "^2.29.1",
     "vue": "^2.6.11",
     "vue-axios": "^3.4.1",
     "vue-router": "^3.5.3",
     "vuex": "^3.4.0"
-},
-"devDependencies": {
+  },
+  "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
@@ -25,5 +31,5 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
-}
+  }
 }

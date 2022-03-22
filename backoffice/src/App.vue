@@ -1,7 +1,7 @@
-<template> 
-  <div id="app">
+<template id="app"> 
+
     <router-view/>
-  </div>
+
 </template>
 <script>
 export default {
@@ -9,5 +9,5 @@ export default {
 }
 </script>
 <style lang="scss">
-
+  
 </style>

@@ -16,17 +16,23 @@ const routes = [
             import ('../views/Connexion.vue')
     },
     {
-        path: '/evenements',
-        name: 'Evenements',
+        path: '/utilisateurs',
+        name: 'Utilisateurs',
         component: () =>
-            import ('../views/Evenements.vue')
+            import ('../views/Utilisateurs.vue')
     },
     {
         path: '/evenements',
         name: 'Evenements',
         component: () =>
             import ('../views/Evenements.vue')
-    }
+    },
+    {
+        path: '/utilisateurs/:id/evenements',
+        name: 'UtilisateurEvenements',
+        component: () =>
+            import ('../views/UtilisateurEve.vue')
+    },
 ]
 
 const router = new VueRouter({

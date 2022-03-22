@@ -10,7 +10,7 @@ export default {}
 
 <style>
 footer{
-    position: absolute; 
+    position: fixed; 
     bottom: 0;
     background-color: rgba(0,0,0,0.5);
     padding: 20px 10px;
