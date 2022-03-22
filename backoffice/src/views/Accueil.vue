@@ -2,7 +2,7 @@
   <section id="accueil">
     <Header />
     <div id="logo">
-    <img src="../assets/logo.png" alt="Reunionou">
+    <img src="assets/logo.png" alt="Reunionou">
     </div>
     <div id="titre">
         <h1>Bienvenue au Reunionou BackOffice !</h1>
