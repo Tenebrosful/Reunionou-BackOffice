@@ -5,33 +5,30 @@
       <div id="listeevenements">
         <div class="unevenement" v-for="evenement in evenements">
           <div class="date">
-            <h1>06</h1>
-            <h1>JUIN</h1>
+            <h1>{{jour(evenement.date)}}</h1>
+            <h1>{{mois(evenement.date)}}</h1>
           </div>
           <div class="description">
-            <h1>Pearl Jam</h1>
-            <p><i class="fas fa-map-marker-alt fa-lg"></i>{{evenement.address.street}}</p>
-            <p><i class="fas fa-user-crown fa-lg"></i>{{evenement.name}}</p>
-            <p><i class="fas fa-male fa-lg"></i>100 participants</p>
+            <h1>{{evenement.title}}</h1>
+            <p><i class="fas fa-map-marker-alt fa-lg"></i>{{evenement.coords.address}}</p>
+            <p><i class="fas fa-user-crown fa-lg"></i>{{evenement.owner.username}}</p>
+            <p><i class="fas fa-male fa-lg"></i>{{evenement.comingParticipant}} participant(s)</p>
+            <p>{{evenement.description}}</p>
           </div>
           <div class="autre">
-            <p><i class="fas fa-trash fa-lg"></i></p>
+            <p v-on:click="delEvenement(evenement.id)"><i class="fas fa-trash fa-lg"></i></p>
             <p v-on:click="getCommentaires(evenement.id)"><i class="fas fa-comment fa-lg"></i></p>
           </div>
           <div class="commentaires">
-            <div v-if="id == evenement.id">
-              <div class="scroller"  v-if="afficher">
-                <p><strong>{{evenement.name}} : </strong>{{evenement.name}}</p>
-                <p><strong>{{evenement.name}} : </strong>{{evenement.name}}</p>
-                <p><strong>{{evenement.name}} : </strong>{{evenement.name}}</p>
-                <p><strong>{{evenement.name}} : </strong>{{evenement.name}}</p>
-                <p><strong>{{evenement.name}} : </strong>{{evenement.name}}</p>
-                <p><strong>{{evenement.name}} : </strong>{{evenement.name}}</p>
+            <div class="scroller" v-if="afficher">
+              <div v-for="commentaire in commentaires">
+                <div v-if="evenement.id == commentaire.event_id">
+                    <p><strong>{{commentaire.author.username}} : </strong>{{commentaire.message}}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        
       </div>
     </div>
     <Footer />
@@ -40,39 +37,53 @@
 
 <script>
 import axios from 'axios';
-import StackModal from '@innologica/vue-stackable-modal';
+import moment from "moment";
 
 export default {
     name: 'Evenements',
     data() {
         return {
           evenements: "",
-          comments: "",
           afficher: false,
-          id: 0
+          commentaires: ""
         }
     },
     methods: {
-       getCommentaires(id){
+      jour(value) {
+            moment.locale('fr');
+            return moment(String(value)).format('DD');
+      },
+      mois(value) {
+          moment.locale('fr');
+          return moment(String(value)).format('MMMM');
+      },
+      getCommentaires(id){
          axios
-            .get("https://jsonplaceholder.typicode.com/users/" + id)
+            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/event/" + id + '/comments?embedAuthor=true')
             .then(response => {
-                this.comments = response.data;
+                this.commentaires = response.data.comments;
                 this.afficher = true;
-                this.id = id;
-                console.log(this.comments)
             })
             .catch(error => {
                 console.log(error);
             });
-       }
+       },
+      delEvenement(id){
+         axios
+            .delete("http://docketu.iutnc.univ-lorraine.fr:62460/api/event/" + id)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+       },
     },
     created(){
          axios
-            .get("https://jsonplaceholder.typicode.com/users")
+            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/event?embedOwner=true&participants=true")
             .then(response => {
-                this.evenements = response.data;
-                console.log(this.evenements)
+                this.evenements = response.data.events;
             })
             .catch(error => {
                 console.log(error);
@@ -92,15 +103,8 @@ export default {
 
 .commentaires{
   background-color: slateblue;
-  height: 92%;
-  width: 78%;
-  padding: 10px 50px;
   color: white;
-
-}
-
-body{
-  font-family: system-ui;
+  padding: 10px 20px;
 }
 
 #listeevenements{
@@ -111,10 +115,10 @@ body{
 .unevenement{
   border: 5px solid slateblue;
   display: grid;
-  grid-template-columns: 0.4fr 0.6fr 0.2fr 0.8fr;
+  grid-template-columns: 0.4fr 1fr 0.1fr 0.6fr;
   grid-column-gap: 50px;
   margin: 20px auto 50px auto;
-  width: 70%;
+  width: 85%;
 }
 .fa-user-crown{
   color: gray;
@@ -131,6 +135,10 @@ body{
   color: gray;
   margin-left: 5px;
   margin-right: 25px;
+}
+
+.description p:nth-of-type(4){
+  text-align: justify;
 }
 
 .date{
@@ -158,18 +166,17 @@ body{
   flex-direction: column;
 }
 
-.fa-comment{
+.autre .fa-comment{
   color: gray;
-  padding: 20px 20px;
-
+  padding: 20px 5px 20px 20px;
 }
 
 .autre p:hover{
   background-color: darkgray;
   
 }
-.fa-trash{
+.autre .fa-trash{
     color: gray;
-    padding: 20px 20px;
+    padding: 20px 5px 20px 20px;
 }
 </style>
