@@ -24,9 +24,6 @@ export default {
 }
 </script>
 <style lang="scss">
-body{
-    font-family: system-ui;
-}
 #titre{
     position: absolute;
     top: 60%;
@@ -40,7 +37,7 @@ body{
 #accueil h1{
     text-align:center;
     color: #00AB8E;
-    font-size: 35px;
+    font-size: 2vw;
 }
 
 img{
