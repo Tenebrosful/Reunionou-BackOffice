@@ -5,12 +5,16 @@
         <div class="card" v-for="utilisateur in utilisateurs">
           <div class="card-inner">
             <div class="card-content">
-              <h1>{{utilisateur.name}}</h1>
-              <p>{{utilisateur.username}}</p>
-              <p>{{utilisateur.email}}</p>
+            <div class="card-info">
+              <h1>{{utilisateur.username}}</h1>
+              <p><i class="fas fa-user-alt"></i> {{utilisateur.username}}</p>
+              <p><i class="fas fa-envelope"></i> {{utilisateur.default_event_mail}}</p>
+              <p><i class="fad fa-calendar-plus"></i> {{date(utilisateur.createdAt) + " à " + time(utilisateur.createdAt)}}</p>
+              <p><i class="fad fa-calendar"></i></i> {{date(utilisateur.last_connexion) + " à " + time(utilisateur.last_connexion)}}</p>
+              </div>
               <div class="buttons">
-                <router-link :to="{ name: 'UtilisateurEvenements', params :{id: utilisateur.id}}"><button type="submit" class="sesevemenents">Ses événements</button></router-link>
-                <button type="submit" class="supprimer">Supprimer</button>
+                <router-link :to="{ name: 'UtilisateurEvenements', params :{id: utilisateur.id}}"><i class="fad fa-calendar-star fa-lg"></i></router-link>
+                <i class="fas fa-trash fa-lg" v-on:click="delUtilisateur(utilisateur.id)"></i>
               </div>
             </div>
           </div>
@@ -22,22 +26,46 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
     name: 'Utilisateurs',
     data() {
         return {
-          utilisateurs: ""
+          utilisateurs: "",
+          id: ""
         }
     },
     methods: {
+      date(value) {
+            if (value) {
+                moment.locale('fr');
+                return moment(String(value)).format('DD MMMM YYYY');
+            } else {
+                moment.locale('fr');
+                return moment().format('YYYY-MM-DD');
+            }
+        },
+      time(value){
+          const today = new Date(value);
+          return today.toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit', second: '2-digit'});
+      },
+      delUtilisateur(id){
+         axios
+            .delete("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + id)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+       },
     },
     created(){
          axios
-            .get("https://jsonplaceholder.typicode.com/users")
+            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user")
             .then(response => {
-                this.utilisateurs = response.data;
-                console.log(this.utilisateurs);
+                this.utilisateurs = response.data.users;
             })
             .catch(error => {
                 console.log(error);
@@ -47,25 +75,19 @@ export default {
 }
 </script>
 <style lang="scss">
-body{
-  font-family: system-ui;
-}
-
 .cards{
   padding-top: 140px;
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: 50px;
   padding-bottom: 50px;
 }
 
 .card {
-  background-color: rgba(0,0,0,0.03);
-  width: 80%;
-  height: 250px;
-  border: 10px dotted royalblue;
-  perspective: 1000px; 
+  width: 90%;
+  height: 270px;
+  border: 10px dotted royalblue; 
   margin: auto auto 50px auto;
 }
 
@@ -73,23 +95,35 @@ body{
   position: relative;
   width: 100%;
   height: 100%;
-  text-align: center;
-  transition: transform 0.8s;
-  transform-style: preserve-3d;
-}
 
+}
 
 .card-content {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 96%;
   background-color: rgba(royalblue, 0.8);
   color: white;
+  padding: 10px 0 0 50px;
+  display: grid;
+  grid-template-columns: 0.7fr 0.3fr;
+}
+
+.card-content h1{
+  text-align: center;
+  margin-left: 25%;
+  margin-bottom: 10%;
 }
 
 .card-content p{
-  font-size: 20px;
+  font-size: 18px;
+  color: white;
 }
+
+.card-content p:nth-of-type(4){
+  color: rgba(black, 0.4);
+}
+
 .supprimer{
   color: white;
   font-weight: bold;
@@ -103,18 +137,48 @@ body{
 .buttons{
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  margin-top: 12%;
 }
 
-.sesevemenents{
-  color: white;
-  font-weight: bold;
-  background-color: orange;
-  border: 1px solid orange;
-  border-radius: 5px;
-  padding: 5px 15px;
-  font-size: 15px;
+.buttons .fa-calendar-star{
+  color: gold;
+  margin-right: 30px;
+  cursor: pointer;
+  padding: 10px 10px;
+}
+
+.buttons .fa-calendar-star:hover{
+  background-color: rgba(black, 0.4);
+}
+
+.buttons .fa-trash{
+  color: darkred;
+  cursor: pointer;
+  padding: 10px 10px;
+}
+
+.buttons .fa-trash:hover{
+  background-color: rgba(black, 0.4);
+   height: fit-content;
+}
+
+.fa-user-alt{
+  color: rgba(black, 0.4);
+}
+
+.fa-envelope{
+  color: rgba(black, 0.4);
+}
+
+.fa-calendar-plus{
+  color: lightgreen;
+}
+
+.fa-calendar{
+  color: rgba(black, 0.4);
+}
+
+p i{
   margin-right: 20px;
 }
 
