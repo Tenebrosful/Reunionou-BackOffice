@@ -2,9 +2,26 @@
   <section>
     <Header />
     <div id="data">
-      <div id="event-buttons">
-        <button type="submit" v-on:click="getSelfEvents()">Ses événements</button>
-        <button type="submit" v-on:click="getJoinedEvents()">Participation aux événements</button>
+      <h1 class="titre" v-if="selfEvent">
+        LISTE DES EVENEMENTS ORGANISÉS PAR "{{ownerEvent.username}}"
+      </h1>
+      <h1 class="titre" v-if="joinedEvent">
+        LES EVENEMENTS PARTICIPÉS PAR "{{ownerEvent.username}}"
+      </h1>
+      <div id="chemin">
+        <div class="dropdown" >
+          <button class="dropbtn">Filtrer par</button>
+          <div class="dropdown-content">
+            <div v-on:click="getSelfEvents()" v-model="selfEvent">Ses événements</div>
+            <div v-on:click="getJoinedEvents()" v-model="joinedEvent">Événements participés</div>
+          </div>
+        </div>
+        <div class="message" v-if="selfEvent">
+          {{message}}
+        </div>
+        <div class="message" v-if="joinedEvent">
+          {{message}}
+        </div>
       </div>
       <div id="listeevenement">
         <div class="unevenement" v-for="evenement in evenements">
@@ -25,8 +42,8 @@
             <p>{{evenement.description}}</p>
           </div>
           <div class="autre">
-            <p><i class="fas fa-trash fa-lg"></i></p>
-            <p><i class="fas fa-comment fa-lg" v-on:click="getCommentaires(evenement.id)"></i></p>
+            <p v-on:click="getCommentaires(evenement.id)"><i class="fas fa-comment fa-lg"></i></p>
+            <p v-on:click="delEvenement(evenement.id)"><i class="fas fa-trash fa-lg"></i></p>
           </div>
           <div class="commentaires">
             <div class="scroller" v-if="afficher">
@@ -56,7 +73,11 @@ export default {
           commentaires: "",
           afficher: false,
           id: this.$route.params.id,
-          owner: ""
+          owner: "",
+          ownerEvent: "",
+          joinedEvent: false,
+          selfEvent: false,
+          message: ""
         }
     },
     methods: {
@@ -84,6 +105,7 @@ export default {
             .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + id)
             .then(response => {
                 this.owner = response.data;
+                this.ownerEvent = response.data;
             })
             .catch(error => {
                 console.log(error);
@@ -94,7 +116,10 @@ export default {
             .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + this.id + '/self-event?participants=true')
             .then(response => {
                 this.getOwner(this.id);
+                this.selfEvent = true;
+                this.joinedEvent = false;
                 this.evenements = response.data.events;
+                this.message = "Ses événements";
             })
             .catch(error => {
                 console.log(error);
@@ -106,56 +131,113 @@ export default {
             .then(response => {
                 this.owner = null;
                 this.evenements = response.data.events;
+                this.selfEvent = false;
+                this.joinedEvent = true;
+                this.message = "Événements participés";
+            })
+            .catch(error => {
+                console.log(error);
+            });
+       },
+       delEvenement(id){
+         axios
+            .delete("http://docketu.iutnc.univ-lorraine.fr:62460/api/event/" + id)
+            .then(response => {
+                console.log(response.data);
             })
             .catch(error => {
                 console.log(error);
             });
        }
-      
     },
-    created(){
+   created(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + this.id + '/self-event?participants=true')
             .then(response => {
                 this.getOwner(this.id);
+                this.selfEvent = true;
                 this.evenements = response.data.events;
+                this.message = "Ses événements";
             })
             .catch(error => {
                 console.log(error);
             });
-    }
+      }
 
 }
 </script>
 <style lang="scss">
-#event-buttons{
-  padding-top: 150px;
+#chemin{
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
 }
 
-#event-buttons button{
-  background-color: darkslateblue;
-  border: 1px solid darkslateblue;
-  border-radius: 5px;
-  color: white;
+.message{
+  margin-top: 65px;
+  margin-left: 50px;
+  color: gray;
   font-weight: bold;
-  padding: 15px 30px;
-  font-size: 20px;
 }
 
-#event-buttons button:hover{
-  background-color: slateblue;
+.titre{
+  color: royalblue;
+  padding-top: 140px;
+  font-size: 30px;
+  text-align: center;
 }
 
-#event-buttons button:nth-of-type(1){
-  margin-right: 50px;
+.dropbtn {
+  background-color: #0096FF;
+  color: white;
+  padding: 15px 50px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid #0096FF;
+  border-radius: 5px;
+  display: flex;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-top: 50px;
+  margin-left: 7%;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: lightblue;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  cursor: pointer;
+}
+
+.dropdown-content div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content div:hover {
+  background-color: rgba(black, 0.3);
+  color: white;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #0096FF;
 }
 
 .scroller {
   width: 100%;
-  height: 180px;
+  height: 225px;
   overflow-y: scroll;
   scrollbar-color: rebeccapurple green;
   scrollbar-width: thin;
@@ -165,6 +247,7 @@ export default {
   background-color: slateblue;
   color: white;
   padding: 10px 20px;
+  text-align: justify;
 }
 
 #listeevenement{
@@ -226,17 +309,22 @@ export default {
   flex-direction: column;
 }
 
-.autre .fa-comment{
-  color: gray;
-  padding: 20px 5px 20px 20px;
+.autre p .fa-comment{
+  color: blue;
+  padding: 20px 20px 20px 20px;
+  background-color: rgba(black, 0.4);
 }
 
-.autre p:hover{
-  background-color: darkgray;
-  
+.autre p .fa-comment:hover{
+  background-color: rgba(slateblue, 0.4);
 }
-.autre .fa-trash{
-    color: gray;
-    padding: 20px 5px 20px 20px;
+.autre p .fa-trash{
+  color: #D22B2B;
+  padding: 20px 20px 20px 20px;
+  background-color: rgba(black, 0.4);
+}
+
+.autre p .fa-trash:hover{
+  background-color: rgba(slateblue, 0.4);
 }
 </style>
