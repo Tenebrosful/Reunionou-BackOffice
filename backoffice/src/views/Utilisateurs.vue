@@ -1,7 +1,8 @@
 <template>
   <section>
     <Header />
-      <div class="cards">
+      <h1 class="titre">LISTE DES UTILISATEURS</h1>
+      <div class="cards" v-bind:created="created()">
         <div class="card" v-for="utilisateur in utilisateurs">
           <div class="card-inner">
             <div class="card-content">
@@ -9,8 +10,10 @@
               <h1>{{utilisateur.username}}</h1>
               <p><i class="fas fa-user-alt"></i> {{utilisateur.username}}</p>
               <p><i class="fas fa-envelope"></i> {{utilisateur.default_event_mail}}</p>
-              <p><i class="fad fa-calendar-plus"></i> {{date(utilisateur.createdAt) + " à " + time(utilisateur.createdAt)}}</p>
-              <p><i class="fad fa-calendar"></i></i> {{date(utilisateur.last_connexion) + " à " + time(utilisateur.last_connexion)}}</p>
+              <p>Date de création :</p>
+              <p>{{date(utilisateur.createdAt) + " à " + time(utilisateur.createdAt).substr(0,2) + "h" + time(utilisateur.createdAt).substr(3,2)}}</p>
+              <p>Dérnière connexion :</p>
+              <p>{{date(utilisateur.last_connexion) + " à " + time(utilisateur.createdAt).substr(0,2) + "h" + time(utilisateur.createdAt).substr(3,2)}}</p>
               </div>
               <div class="buttons">
                 <router-link :to="{ name: 'UtilisateurEvenements', params :{id: utilisateur.id}}"><i class="fad fa-calendar-star fa-lg"></i></router-link>
@@ -60,8 +63,7 @@ export default {
                 console.log(error);
             });
        },
-    },
-    created(){
+      created(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user")
             .then(response => {
@@ -70,13 +72,14 @@ export default {
             .catch(error => {
                 console.log(error);
             });
+      }
     }
 
 }
 </script>
 <style lang="scss">
 .cards{
-  padding-top: 140px;
+  padding-top: 60px;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr;
@@ -84,9 +87,16 @@ export default {
   padding-bottom: 50px;
 }
 
+.titre{
+  color: royalblue;
+  padding-top: 140px;
+  font-size: 30px;
+  text-align: center;
+}
+
 .card {
   width: 90%;
-  height: 270px;
+  height: 350px;
   border: 10px dotted royalblue; 
   margin: auto auto 50px auto;
 }
@@ -95,13 +105,12 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-
 }
 
 .card-content {
   position: absolute;
-  width: 90%;
-  height: 96%;
+  width: 89%;
+  height: 97%;
   background-color: rgba(royalblue, 0.8);
   color: white;
   padding: 10px 0 0 50px;
@@ -120,8 +129,20 @@ export default {
   color: white;
 }
 
-.card-content p:nth-of-type(4){
+.card-content p:nth-of-type(3){
   color: rgba(black, 0.4);
+}
+
+.card-content p:nth-of-type(4){
+  margin-left: 20px;
+}
+
+.card-content p:nth-of-type(5){
+  color: rgba(black, 0.4);
+}
+
+.card-content p:nth-of-type(6){
+  margin-left: 20px;
 }
 
 .supprimer{
@@ -145,21 +166,24 @@ export default {
   margin-right: 30px;
   cursor: pointer;
   padding: 10px 10px;
+  background-color: rgba(black, 0.4);
 }
 
 .buttons .fa-calendar-star:hover{
-  background-color: rgba(black, 0.4);
+  background-color: rgba(white, 0.4);
 }
 
 .buttons .fa-trash{
-  color: darkred;
+  color: #D22B2B;
   cursor: pointer;
   padding: 10px 10px;
+  background-color: rgba(black, 0.4);
+  height: fit-content;
 }
 
 .buttons .fa-trash:hover{
-  background-color: rgba(black, 0.4);
-   height: fit-content;
+  background-color: rgba(white, 0.4);
+  height: fit-content;
 }
 
 .fa-user-alt{
@@ -171,7 +195,7 @@ export default {
 }
 
 .fa-calendar-plus{
-  color: lightgreen;
+  color: rgba(black, 0.4);
 }
 
 .fa-calendar{
