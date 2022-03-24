@@ -1,6 +1,7 @@
 <template>
   <section>
     <Header />
+    <h1 class="titre">LISTE DES EVENEMENTS DE TOUS LES UTILISATEURS</h1>
     <div id="data">
       <div id="listeevenements">
         <div class="unevenement" v-for="evenement in evenements">
@@ -16,8 +17,8 @@
             <p>{{evenement.description}}</p>
           </div>
           <div class="autre">
-            <p v-on:click="delEvenement(evenement.id)"><i class="fas fa-trash fa-lg"></i></p>
             <p v-on:click="getCommentaires(evenement.id)"><i class="fas fa-comment fa-lg"></i></p>
+            <p v-on:click="delEvenement(evenement.id)"><i class="fas fa-trash fa-lg"></i></p>
           </div>
           <div class="commentaires">
             <div class="scroller" v-if="afficher">
@@ -88,14 +89,21 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-    }
+      }
 
 }
 </script>
 <style lang="scss">
+.titre{
+  color: royalblue;
+  padding-top: 140px;
+  font-size: 30px;
+  text-align: center;
+}
+
 .scroller {
   width: 100%;
-  height: 180px;
+  height: 225px;
   overflow-y: scroll;
   scrollbar-color: rebeccapurple green;
   scrollbar-width: thin;
@@ -105,10 +113,11 @@ export default {
   background-color: slateblue;
   color: white;
   padding: 10px 20px;
+  text-align: justify;
 }
 
 #listeevenements{
-  padding-top: 120px;
+  padding-top: 60px;
   padding-bottom: 50px;
 }
 
@@ -166,17 +175,22 @@ export default {
   flex-direction: column;
 }
 
-.autre .fa-comment{
-  color: gray;
-  padding: 20px 5px 20px 20px;
+.autre p .fa-comment{
+  color: blue;
+  padding: 20px 20px 20px 20px;
+  background-color: rgba(black, 0.4);
 }
 
-.autre p:hover{
-  background-color: darkgray;
-  
+.autre p .fa-comment:hover{
+  background-color: rgba(slateblue, 0.4);
 }
-.autre .fa-trash{
-    color: gray;
-    padding: 20px 5px 20px 20px;
+.autre p .fa-trash{
+  color: #D22B2B;
+  padding: 20px 20px 20px 20px;
+  background-color: rgba(black, 0.4);
+}
+
+.autre p .fa-trash:hover{
+  background-color: rgba(slateblue, 0.4);
 }
 </style>
