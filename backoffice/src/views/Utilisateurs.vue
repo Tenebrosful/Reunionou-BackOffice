@@ -2,14 +2,19 @@
   <section>
     <Header />
       <h1 class="titre">LISTE DES UTILISATEURS</h1>
-      <div class="cards" v-bind:created="created()">
-        <div class="card" v-for="utilisateur in utilisateurs">
+      <div class="cards">
+        <div class="card" v-for="utilisateur in utilisateurs" v-bind:key="utilisateur.id">
           <div class="card-inner">
             <div class="card-content">
             <div class="card-info">
               <h1>{{utilisateur.username}}</h1>
               <p><i class="fas fa-user-alt"></i> {{utilisateur.username}}</p>
-              <p><i class="fas fa-envelope"></i> {{utilisateur.default_event_mail}}</p>
+              <p v-if="utilisateur.default_event_mail != null">
+                <i class="fas fa-envelope"></i> {{utilisateur.default_event_mail}}
+              </p>
+              <p v-else>
+                <i class="fas fa-envelope"></i> -
+              </p>
               <p>Date de création :</p>
               <p>{{date(utilisateur.createdAt) + " à " + time(utilisateur.createdAt).substr(0,2) + "h" + time(utilisateur.createdAt).substr(3,2)}}</p>
               <p>Dérnière connexion :</p>
@@ -55,7 +60,11 @@ export default {
       },
       delUtilisateur(id){
          axios
-            .delete("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + id)
+            .delete("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + id, {
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
                 console.log(response.data);
             })
@@ -63,18 +72,22 @@ export default {
                 console.log(error);
             });
        },
-      created(){
+    },
+    created(){
          axios
-            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user")
+            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user",
+            {
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
-                this.utilisateurs = response.data.users;
+                 this.utilisateurs = response.data.users;
             })
             .catch(error => {
                 console.log(error);
             });
-      }
-    }
-
+    },
 }
 </script>
 <style lang="scss">
@@ -127,6 +140,14 @@ export default {
 .card-content p{
   font-size: 18px;
   color: white;
+}
+
+.card-info p:nth-of-type(3){
+  font-weight: bold;
+}
+
+.card-info p:nth-of-type(5){
+  font-weight: bold;
 }
 
 .card-content p:nth-of-type(3){
