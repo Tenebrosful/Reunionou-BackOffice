@@ -12,8 +12,8 @@
         <div class="dropdown" >
           <button class="dropbtn">Filtrer par</button>
           <div class="dropdown-content">
-            <div v-on:click="getSelfEvents()" v-model="selfEvent">Ses événements</div>
-            <div v-on:click="getJoinedEvents()" v-model="joinedEvent">Événements participés</div>
+            <div v-on:click="getSelfEvents()">Ses événements</div>
+            <div v-on:click="getJoinedEvents()">Événements participés</div>
           </div>
         </div>
         <div class="message" v-if="selfEvent">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div id="listeevenement">
-        <div class="unevenement" v-for="evenement in evenements">
+        <div class="unevenement" v-for="evenement in evenements" v-bind:key="evenement.id">
           <div class="date">
             <h1>{{jour(evenement.date)}}</h1>
             <h1>{{mois(evenement.date)}}</h1>
@@ -47,7 +47,7 @@
           </div>
           <div class="commentaires">
             <div class="scroller" v-if="afficher">
-              <div v-for="commentaire in commentaires">
+              <div v-for="commentaire in commentaires" v-bind:key="commentaire.id">
                 <div v-if="evenement.id == commentaire.event_id">
                     <p><strong>{{commentaire.author.username}} : </strong>{{commentaire.message}}</p>
                 </div>
@@ -91,7 +91,11 @@ export default {
         },
         getCommentaires(id){
          axios
-            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/event/" + id + '/comments?embedAuthor=true')
+            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id + '/comments?embedAuthor=true', {
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
                 this.commentaires = response.data.comments;
                 this.afficher = true;
@@ -102,7 +106,11 @@ export default {
        },
        getOwner(id){
          axios
-            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + id)
+            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + id, {
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
                 this.owner = response.data;
                 this.ownerEvent = response.data;
@@ -113,7 +121,11 @@ export default {
        },
        getSelfEvents(){
          axios
-            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + this.id + '/self-event?participants=true')
+            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + this.id + '/self-event?participants=true', {
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
                 this.getOwner(this.id);
                 this.selfEvent = true;
@@ -127,7 +139,11 @@ export default {
        },
        getJoinedEvents(){
          axios
-            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + this.id + '/joined-event?participants=true&embedOwner=true')
+            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + this.id + '/joined-event?participants=true&embedOwner=true',{
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
                 this.owner = null;
                 this.evenements = response.data.events;
@@ -141,7 +157,11 @@ export default {
        },
        delEvenement(id){
          axios
-            .delete("http://docketu.iutnc.univ-lorraine.fr:62460/api/event/" + id)
+            .delete("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id, {
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
                 console.log(response.data);
             })
@@ -152,12 +172,17 @@ export default {
     },
    created(){
          axios
-            .get("http://docketu.iutnc.univ-lorraine.fr:62460/api/user/" + this.id + '/self-event?participants=true')
+            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + this.id + '/self-event?participants=true', {
+                headers: {
+                  authorization: this.$store.state.token 
+                }
+              })
             .then(response => {
                 this.getOwner(this.id);
                 this.selfEvent = true;
                 this.evenements = response.data.events;
                 this.message = "Ses événements";
+                console.log(this.id);
             })
             .catch(error => {
                 console.log(error);
