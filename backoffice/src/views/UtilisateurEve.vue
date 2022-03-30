@@ -77,7 +77,8 @@ export default {
           ownerEvent: "",
           joinedEvent: false,
           selfEvent: false,
-          message: ""
+          message: "",
+          users: ""
         }
     },
     methods: {
@@ -168,7 +169,7 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-       }
+       },
     },
    created(){
          axios
