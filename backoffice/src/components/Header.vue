@@ -6,7 +6,7 @@
         <div id="navbar-content">
             <ul>
                 <li id="utilisateurs">
-                        <router-link to="/utilisateurs">Utilisateurs</router-link>
+                    <router-link to='/utilisateurs'>Utilisateurs</router-link>
                 </li>
                 <li id="evenements">
                     <router-link to="/evenements">Événements</router-link>
@@ -14,36 +14,30 @@
             </ul>
         </div>
         <div id="navbar-compte">
-            <router-link to="/connexion"><img src="assets/compte.png" alt="Connexion"></router-link>
+            <div v-if="connected == false">
+                <router-link to="/connexion"><img src="assets/compte.png" alt="Connexion"></router-link>
+            </div>
+            <div v-else>
+                <router-link to="/"><img src="assets/logout.png" alt="Deconnexion" v-on:click="deconnexion()"></router-link>
+            </div>
         </div>
     </nav>
 </template>
 
 <script>
-//import axios from 'axios';
-
 export default {
     data() {
         return {
-           
+           admin : this.$store.state.admin,
+           connected : this.$store.state.connected
         }
     },
     methods: {
-       
+       deconnexion(){
+           this.$store.commit("setToken", "");
+           this.$store.commit("setConnected", false);
+       }
     },
-    /*created(){
-         axios
-            .get("http://localhost:3000/creneaux/" +  this.momentDate(this.emission_date))
-            .then(response => {
-                this.emission_data = response.data.filter(emissionsFiltered =>
-                                emissionsFiltered.heure <= this.getCurrentTime() && this.getCurrentTime() < this.getTimePlus30Min(emissionsFiltered.heure))[0];
-                 console.log(this.emission_data);              
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }*/
-
 }
 </script>
 
@@ -54,7 +48,7 @@ export default {
     grid-template-columns: 0.15fr 1fr 0.15fr;
     background-color: rgba(0,0,0,0.85);
     font-family: system-ui;
-    font-size: 18px;
+    font-size: 1.2vw;
     font-weight: bold;
     top: 0;
     position: absolute; 
@@ -69,7 +63,7 @@ export default {
 
 #navbar-logo img{
     margin: 10px 0 10px 10px;
-    width: 100px;
+    width: 5vw;
 }
 
 #navbar-content{
@@ -80,10 +74,6 @@ export default {
     list-style: none;
     display: grid;
     grid-template-columns: 0.2fr 0.2fr;
-}
-
-#navbar-content ul li {
-    
 }
 
 #navbar-content ul li a:hover{
@@ -103,7 +93,7 @@ export default {
 
 #navbar-compte img{
     margin: 10px 10px;
-    width: 70px;
+    width: 4vw;
 }
 
 </style>
