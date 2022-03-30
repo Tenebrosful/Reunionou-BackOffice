@@ -53,7 +53,7 @@
                 <p>Dérnière connexion :</p>
                 <p>Il y a {{countDays(utilisateur.last_connexion)}} jours</p>
               </div>
-              <div v-if="userActive">
+              <div v-if="userActive || admins">
                 <div class="buttons">
                   <router-link :to="{ name: 'UtilisateurEvenements', params :{id: utilisateur.id}}"><i class="fad fa-calendar-star fa-lg"></i></router-link>
                     <i class="fas fa-trash fa-lg" v-on:click="delUtilisateurActive(utilisateur.id)"></i>
@@ -195,7 +195,7 @@ export default {
                 this.userActive = false;
                 this.admins = false;
                 this.userInactive = true;
-                this.message = "Utilisateurs Non Actives";
+                this.message = "Utilisateurs Inactives";
             })
             .catch(error => {
                 console.log(error);
@@ -264,6 +264,7 @@ export default {
   margin-left: 65%;
   margin-right: 18%;
 }
+
 #btn-supprimer #supprimer{
   background-color: rgba(red, 0.8);
   border: 1px solid rgba(red, 0.8);
@@ -273,6 +274,14 @@ export default {
   padding: 15px 50px;
   font-weight: bold;
   margin-left: 85%;
+  cursor: pointer;
+}
+
+#btn-supprimer #supprimer:hover{
+  background-color: rgba(red, 0.4);
+  border: 1px solid rgba(red, 0.4);
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .message1{
