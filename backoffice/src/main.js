@@ -19,7 +19,7 @@ Vue.component("Header", () => import ("@/components/Header.vue"));
 Vue.component("Footer", () => import ("./components/Footer.vue"));
 
 new Vue({
+    render: h => h(App),
     router,
     store,
-    render: h => h(App)
 }).$mount('#app')

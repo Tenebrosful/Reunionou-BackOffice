@@ -5,33 +5,29 @@ Vue.use(VueRouter)
 
 const routes = [
     {
-        path: '/',
+        component: () => import('../views/Accueil.vue'),
         name: 'Accueil',
-        component: () => import ('../views/Accueil.vue')
+        path: '/',
     },
     {
-        path: '/connexion',
+        component: () => import('../views/Connexion.vue'),
         name: 'Connexion',
-        component: () =>
-            import ('../views/Connexion.vue')
+        path: '/connexion',
     },
     {
-        path: '/utilisateurs',
+        component: () => import('../views/Utilisateurs.vue'),
         name: 'Utilisateurs',
-        component: () =>
-            import ('../views/Utilisateurs.vue')
+        path: '/utilisateurs',
     },
     {
-        path: '/evenements',
+        component: () => import('../views/Evenements.vue'),
         name: 'Evenements',
-        component: () =>
-            import ('../views/Evenements.vue')
+        path: '/evenements',
     },
     {
-        path: '/utilisateurs/:id/evenements',
+        component: () => import('../views/UtilisateurEve.vue'),
         name: 'UtilisateurEvenements',
-        component: () =>
-            import ('../views/UtilisateurEve.vue')
+        path: '/utilisateurs/:id/evenements',
     },
 ]
 

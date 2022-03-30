@@ -8,23 +8,23 @@ const vuexLocal = new VuexPersistence({
     storage: window.localStorage
 })
 export default new Vuex.Store({
-    plugins:[vuexLocal.plugin],
-    state: {
-        token: "",
-        admin: "",
-        connected: false
-    },
+    actions: {},
+    modules: {},
     mutations: {
+        setAdmin(state, admin) {
+            state.admin = admin
+        },
+        setConnected(state, connected) {
+            state.connected = connected
+        },
         setToken(state, token) {
             state.token = token
         },
-        setAdmin(state, admin){
-            state.admin = admin
-        },
-        setConnected(state, connected){
-            state.connected = connected
-        }
     },
-    actions: {},
-    modules: {}
+    plugins: [vuexLocal.plugin],
+    state: {
+        admin: "",
+        connected: false,
+        token: "",
+    },
 })
