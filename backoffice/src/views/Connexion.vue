@@ -2,13 +2,13 @@
   <section>
     <Header />
     <div id="connexion">
-      <h1><u>CONNEXION</u></h1>
+      <h1>CONNEXION</h1>
       <form>
-        <input type="text" id="username" placeholder="Identifiant" v-model="username"/>
+        <input type="text" id="username" placeholder="Identifiant" v-model="login"/>
         <p></p>
         <input type="password" id="password" placeholder="Mot de passe" v-model="password"/>
         <div id="button">
-          <p><button type="submit" id="submit">Se connecter</button></p>
+          <p><button type="submit" id="submit-connexion" v-on:click="connexion()">Se connecter</button></p>
         </div>
       </form>
     </div>
@@ -17,35 +17,39 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 
 export default {
     name: 'Connexion',
     data() {
         return {
+          admin: "",
+          login: "",
+          password: ""
         }
     },
     methods: {
-       
-    },
-    /*created(){
-         axios
-            .get("http://localhost:3000/creneaux/" +  this.momentDate(this.emission_date))
+      connexion(){
+        let data = {
+          "login": this.login,
+          "password": this.password
+        }
+        axios
+            .post("http://docketu.iutnc.univ-lorraine.fr:62461/api/auth", data)
             .then(response => {
-                this.emissions = response.data;
+              	this.$store.commit('setToken', response.data.user.token);
+                this.$store.commit('setAdmin', response.data.user.username);
+                this.$store.commit('setConnected', true);
+                this.$router.push('/');
             })
             .catch(error => {
                 console.log(error);
             });
-    }*/
-
+      }
+    },
 }
 </script>
 <style lang="scss">
-body{
-  font-family: system-ui;
-}
-
 #connexion{
   position: absolute;
   top: 25%;
@@ -58,7 +62,7 @@ body{
   background-color: rgba(4,4,4,0.5);
 }
 
-p{
+#connexion p{
   font-weight: bold;
 }
 
@@ -77,7 +81,7 @@ input {
   margin-bottom: 15%;
 }
 
-#submit{
+#submit-connexion{
   color: white;
   background-color: dodgerblue;
   border-radius: 5px;
@@ -94,6 +98,6 @@ input {
   align-items: center;
   margin-top: 30px;
   margin-bottom: 10%;
-   width: 100%;
+  width: 100%;
 }
 </style>
