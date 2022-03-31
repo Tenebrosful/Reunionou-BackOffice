@@ -37,3 +37,7 @@ npm run build
   - Gestion des événements `VueJS, Axios`
   - Connexion avec authentification `JS, Axios`
   - Stockage des données (token, connexion(boolean), admin) `VueJS, Vuex` 
+
+
+## Démonstration
+Lien de vidéo démonstration "Reunionou-BackOffice" : https://drive.google.com/file/d/1Y_sELQG9fPML1H1GWDBtHoDFyR_fMHq8/view?usp=sharing
