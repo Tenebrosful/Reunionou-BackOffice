@@ -12,12 +12,12 @@ Dans le dossier `/backoffice`
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Serve with Hot Reload at localhost:8080
 
 Dans le dossier `/backoffice`
 
 ```sh
-npm run dev
+npm run serve
 ```
 
 ### Compile and Minify for Production
