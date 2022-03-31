@@ -6,7 +6,7 @@
 
 ## Installation
 
-Dans le dossier `/webapp`
+Dans le dossier `/backoffice`
 
 ```sh
 npm install
@@ -14,7 +14,7 @@ npm install
 
 ### Compile and Hot-Reload for Development
 
-Dans le dossier `/webapp`
+Dans le dossier `/backoffice`
 
 ```sh
 npm run dev
@@ -22,7 +22,7 @@ npm run dev
 
 ### Compile and Minify for Production
 
-Dans le dossier `/webapp`
+Dans le dossier `/backoffice`
 
 ```sh
 npm run build
