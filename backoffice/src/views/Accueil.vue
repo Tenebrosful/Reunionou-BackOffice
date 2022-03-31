@@ -5,8 +5,9 @@
     <img src="assets/logo.png" alt="Reunionou">
     </div>
     <div id="accueil-titre">
-        <h1>Bienvenue au Reunionou BackOffice !</h1>
+        <h1>Bienvenue au Reunionou BackOffice, <em style="color: orange">{{adminConnected}}</em> ! </h1>
     </div>
+
     <Footer />
   </section>
 </template>
@@ -16,6 +17,7 @@ export default {
     name: 'Accueil',
     data() {
         return {
+            adminConnected: this.$store.state.admin
         }
     },
     methods: {

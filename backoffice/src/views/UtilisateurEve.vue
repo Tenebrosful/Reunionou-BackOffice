@@ -82,14 +82,31 @@ export default {
         }
     },
     methods: {
+
+       /**
+         * Afficher un jour
+         * @param : date
+         * @return : jour avec un format 'DD'
+         */
         jour(value) {
             moment.locale('fr');
             return moment(String(value)).format('DD');
         },
+
+        /**
+         * Afficher un mois
+         * @param : date
+         * @return : mois avec un format 'MMMM'
+         */
         mois(value) {
             moment.locale('fr');
             return moment(String(value)).format('MMMM');
         },
+
+        /**
+         * Récupérer tous les événements organisés par un utilisateur
+         * @param : id d'un événement
+         */
         getCommentaires(id){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id + '/comments?embedAuthor=true', {
@@ -105,6 +122,11 @@ export default {
                 console.log(error);
             });
        },
+
+      /**
+       * Récupérer les informations d'un utilisateur
+       * @param : id d'utilisateur
+       */
        getOwner(id){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + id, {
@@ -120,6 +142,11 @@ export default {
                 console.log(error);
             });
        },
+      
+      /**
+        * Récupérer tous les événements organisés par un utilisateur
+        * @param : vide
+        */
        getSelfEvents(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + this.id + '/self-event?participants=true', {
@@ -138,6 +165,11 @@ export default {
                 console.log(error);
             });
        },
+       
+       /**
+         * Récupérer tous les événements qu'un utilisateur participe
+         * @param : vide
+         */
        getJoinedEvents(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + this.id + '/joined-event?participants=true&embedOwner=true',{
@@ -156,6 +188,11 @@ export default {
                 console.log(error);
             });
        },
+      
+       /**
+         * Supprimer un événement
+         * @param : id d'un événement
+         */
        delEvenement(id){
          axios
             .delete("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id, {
@@ -164,14 +201,24 @@ export default {
                 }
               })
             .then(response => {
-                console.log(response.data);
+              if(this.message == "Ses événements"){
+                  this.getSelfEvents();
+              }
+              else{
+                  this.getJoinedEvents();
+              }
             })
             .catch(error => {
                 console.log(error);
             });
        },
     },
-   created(){
+    
+    /**
+     * Afficher tous les événements organisés par un utilisateur
+     * @param : vide
+     */
+   created() {
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + this.id + '/self-event?participants=true', {
                 headers: {
@@ -183,7 +230,6 @@ export default {
                 this.selfEvent = true;
                 this.evenements = response.data.events;
                 this.message = "Ses événements";
-                console.log(this.id);
             })
             .catch(error => {
                 console.log(error);

@@ -33,8 +33,13 @@ export default {
         }
     },
     methods: {
+       /**
+         * Se déconnecter, modification des valeurs token et connected
+         * @param : vide
+         */
        deconnexion(){
            this.$store.commit("setToken", "");
+           this.$store.commit("setAdmin", "");
            this.$store.commit("setConnected", false);
        }
     },

@@ -29,6 +29,10 @@ export default {
         }
     },
     methods: {
+       /**
+         * Se connecter et stocker des données dans le store token, admin et connected
+         * @param : vide
+         */
       connexion(){
         let data = {
           "login": this.login,
