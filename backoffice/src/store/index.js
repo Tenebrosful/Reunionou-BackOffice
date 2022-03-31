@@ -11,12 +11,26 @@ export default new Vuex.Store({
     actions: {},
     modules: {},
     mutations: {
+        /**
+         * Stocker username d'un admin
+         * @param : state et admin
+         */
         setAdmin(state, admin) {
             state.admin = admin
         },
+
+        /**
+         * Stocker un status de connexion
+         * @param : state et connected
+         */
         setConnected(state, connected) {
             state.connected = connected
         },
+
+        /**
+         * Stocker un token
+         * @param : state et token
+         */
         setToken(state, token) {
             state.token = token
         },

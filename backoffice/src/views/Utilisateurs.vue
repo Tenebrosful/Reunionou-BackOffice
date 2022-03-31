@@ -88,34 +88,62 @@ export default {
           message: "",
           userActive: false,
           userInactive: false,
-          admins: true
+          admins: true,
         }
     },
     methods: {
+      /**
+       * Tranformer le format d'une date
+       * @param : value (date)
+       * @return : date en format 'DD MMMM YYYY'
+       */
       formatdate(value) {
-            if (value) {
-                moment.locale('fr');
-                return moment(String(value)).format('DD MMMM YYYY');
-            }
-        },
-      date(value) {
-            if (value) {
-                moment.locale('fr');
-                return moment(String(value)).format('DD-MM-YYYY');
-            } else {
-                moment.locale('fr');
-                return moment().format('DD-MM-YYYY');
-            }
-        },
-      countDays(value){
-        var date = moment([this.date(value).substr(6,4), this.date(value).substr(3,2), this.date(value).substr(0,2)]);
-        var now = moment([this.date().substr(6,4), this.date().substr(3,2), this.date().substr(0,2)]);
-        return now.diff(date, 'days') ;
+        if (value) {
+            moment.locale('fr');
+            return moment(String(value)).format('DD MMMM YYYY');
+        }
       },
+
+     /**
+       * Récupérer une date
+       * @param : value (date)
+       * @return : date
+       */
+      date(value) {
+        if (value) {
+            moment.locale('fr');
+            return moment(String(value));
+        } else {
+            moment.locale('fr');
+            return moment();
+        }
+      },
+      
+      /**
+       * Compter la différence entre deux dates
+       * @param : value (date)
+       * @return : int 
+       */
+      countDays(value){
+        var date = this.date(value);
+        var now = this.date();
+        return now.diff(date, 'days');
+      },
+
+      /**
+       * Tranformer le format d'une heure
+       * @param : value (date)
+       * @return : heure en format 'hh:mm:ss'
+       */
       time(value){
           const today = new Date(value);
           return today.toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit', second: '2-digit'});
       },
+
+      /**
+       * Supprimer un utilisateur active
+       * @param : id d'un utilisateur active
+       */
       delUtilisateurActive(id){
          axios
             .delete("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/" + id, {
@@ -124,12 +152,22 @@ export default {
                 }
               })
             .then(response => {
-                console.log(response.data);
+              if(this.message == "Utilisateurs Actives"){
+                  this.getUtilisateursActives();
+              }
+              else if(this.message == "Administrateurs"){
+                this.getAdmins();
+              }
             })
             .catch(error => {
                 console.log(error);
             });
        },
+
+      /**
+       * Supprimer tous les utilisateurs inactives
+       * @param : vide
+       */
        delUtilisateurInactive(){
          axios
             .delete("http://docketu.iutnc.univ-lorraine.fr:62461/api/user?forceDelete=true", {
@@ -138,12 +176,17 @@ export default {
                 }
               })
             .then(response => {
-                console.log(response.data);
+                this.getUtilisateursInactives();
             })
             .catch(error => {
                 console.log(error);
             });
        },
+
+      /**
+       * Récuperer tous les utilisateurs
+       * @param : vide
+       */
        getUtilisateurs(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/", {
@@ -158,6 +201,11 @@ export default {
                 console.log(error);
             });
        },
+
+      /**
+       * Récuperer tous les utilisateurs actives
+       * @param : vide
+       */
        getUtilisateursActives(){
           axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/account",
@@ -167,7 +215,7 @@ export default {
                 }
               })
             .then(response => {
-                this.utilisateurs = response.data.userAccounts.filter(users => users.isAdmin == false);
+                this.utilisateurs = response.data.userAccounts.filter(users => (users.isAdmin == false &&  this.date().diff(this.date(users.last_connexion), 'days') <= 30));
                 this.getUtilisateurs();
                 this.userActive = true;
                 this.admins = false;
@@ -178,6 +226,11 @@ export default {
                 console.log(error);
             });
        },
+
+      /**
+       * Récuperer tous les utilisateurs inactives
+       * @param : vide
+       */
        getUtilisateursInactives(){
           axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/account",
@@ -187,9 +240,7 @@ export default {
                 }
               })
             .then(response => {
-                var now1 = moment([this.date().substr(6,4), this.date().substr(3,2), this.date().substr(0,2)]);
-                
-                this.utilisateurs = response.data.userAccounts.filter(users => (users.isAdmin == false &&  now1.diff(moment([this.date(users.last_connexion).substr(6,4), this.date(users.last_connexion).substr(3,2), this.date(users.last_connexion).substr(0,2)]), 'days') > 30));
+                this.utilisateurs = response.data.userAccounts.filter(users => (users.isAdmin == false &&  this.date().diff(this.date(users.last_connexion), 'days') > 30));
                 this.getUtilisateurs();
                 this.userInscrit = false;
                 this.userActive = false;
@@ -201,6 +252,11 @@ export default {
                 console.log(error);
             });
        },
+
+      /**
+       * Récuperer tous les administrateurs
+       * @param : vide
+       */
        getAdmins(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/account",
@@ -224,6 +280,11 @@ export default {
        }
 
     },
+
+    /**
+       * Récuperer tous les administrateurs
+       * @param : vide
+       */
     created(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/user/account",
@@ -233,8 +294,8 @@ export default {
                 }
               })
             .then(response => {
-                 this.utilisateurs = response.data.userAccounts.filter(users => users.isAdmin == true);
                  this.getUtilisateurs();
+                 this.utilisateurs = response.data.userAccounts.filter(users => users.isAdmin == true);
                  this.admins = true;
                  this.userInactive = false;
                  this.userInscrit = false;

@@ -50,44 +50,90 @@ export default {
         }
     },
     methods: {
-      jour(value) {
+      /**
+         * Afficher un jour
+         * @param : date
+         * @return : jour avec un format 'DD'
+         */
+        jour(value) {
             moment.locale('fr');
             return moment(String(value)).format('DD');
-      },
-      mois(value) {
-          moment.locale('fr');
-          return moment(String(value)).format('MMMM');
-      },
-      getCommentaires(id){
-         axios
-            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id + '/comments?embedAuthor=true', {
+        },
+
+        /**
+         * Afficher un mois
+         * @param : date
+         * @return : mois avec un format 'MMMM'
+         */
+        mois(value) {
+            moment.locale('fr');
+            return moment(String(value)).format('MMMM');
+        },
+
+        /**
+         * Récupérer tous les événements organisés par un utilisateur
+         * @param : id d'un événement
+         */
+        getCommentaires(id){
+          axios
+              .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id + '/comments?embedAuthor=true', {
+                  headers: {
+                    authorization: this.$store.state.token 
+                  }
+                })
+              .then(response => {
+                  this.commentaires = response.data.comments;
+                  this.afficher = true;
+              })
+              .catch(error => {
+                  console.log(error);
+              });
+        },
+
+       /**
+         * Récupérer tous les événements de tous les utilisateur
+         * @param : vide
+         */
+        getAllEvents(){
+          axios
+            .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/event?embedOwner=true&participants=true", 
+            {
                 headers: {
                   authorization: this.$store.state.token 
                 }
               })
             .then(response => {
-                this.commentaires = response.data.comments;
-                this.afficher = true;
+                this.evenements = response.data.events;
             })
             .catch(error => {
                 console.log(error);
             });
-       },
-      delEvenement(id){
-         axios
-            .delete("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id, {
-                headers: {
-                  authorization: this.$store.state.token 
-                }
+        },
+
+       /**
+         * Supprimer un événement
+         * @param : id d'un événement
+         */
+        delEvenement(id){
+          axios
+              .delete("http://docketu.iutnc.univ-lorraine.fr:62461/api/event/" + id, {
+                  headers: {
+                    authorization: this.$store.state.token 
+                  }
+                })
+              .then(response => {
+                  this.getAllEvents();
               })
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-       },
+              .catch(error => {
+                  console.log(error);
+              });
+        },
     },
+
+    /**
+     * Récupérer tous les événements de tous les utilisateur
+     * @param : vide
+     */
     created(){
          axios
             .get("http://docketu.iutnc.univ-lorraine.fr:62461/api/event?embedOwner=true&participants=true", 
