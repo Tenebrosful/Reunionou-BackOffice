@@ -6,7 +6,7 @@
     "html-validate": "npx html-validate ."
   },
   "devDependencies": {
-    "@types/node": "^17.0.21",
+    "@types/node": "^17.0.24",
     "eslint": "^8.11.0",
     "html-validate": "^6.6.0",
     "nodemon": "^2.0.15",
